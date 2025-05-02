@@ -1,0 +1,35 @@
+specVersion: v0.1.0
+package:
+  name: solana-spl-token
+  version: v0.1.0
+  url: https://github.com/streamingfast/substreams-spl-token
+
+imports:
+  solana_common: https://github.com/streamingfast/substreams-foundational-modules/releases/download/solana-common-v0.3.0/solana-common-v0.3.0.spkg
+
+protobuf:
+  files:
+    - sf/solana/v1/spl/type/spl.proto
+    - schema/schema.proto
+  excludePaths:
+    - sf/substreams
+    - google
+  importPaths:
+    - ./proto
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: target/wasm32-unknown-unknown/release/substreams_hivemapper.wasm
+
+modules:
+  - name: map_spl_instruction
+    kind: map
+    initialBlock: 158569587
+    inputs:
+#      - source: sf.substreams.v1.Clock
+      - map: solana_common:transactions_by_programid_and_account_without_votes
+    output:
+      type: proto:sf.solana.spl.v1.type.SplInstructions
+
+network: solana
