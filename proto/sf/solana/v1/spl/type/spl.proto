@@ -12,7 +12,6 @@ message SplInstructions {
 message Instruction {
   option (schema.table) = {
     name: "instructions"
-    child_of: "transactions on trx_hash"
   };
 
   string instruction_id =1 [(schema.field) = { primary_key: true }];

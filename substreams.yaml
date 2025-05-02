@@ -23,13 +23,17 @@ binaries:
     file: target/wasm32-unknown-unknown/release/substreams_hivemapper.wasm
 
 modules:
-  - name: map_spl_instruction
+  - name: map_spl_instructions
     kind: map
     initialBlock: 158569587
     inputs:
-#      - source: sf.substreams.v1.Clock
+      - params: string
       - map: solana_common:transactions_by_programid_and_account_without_votes
     output:
       type: proto:sf.solana.spl.v1.type.SplInstructions
 
 network: solana
+
+params:
+  map_spl_instructions: "spl_token_address=4vMsoUT2BWatFweudnQM1xedRLfJgJ7hswhcpz4xgBTy|spl_token_decimal=9"
+  solana_common:transactions_by_programid_and_account_without_votes: "program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA && account:4vMsoUT2BWatFweudnQM1xedRLfJgJ7hswhcpz4xgBTy"

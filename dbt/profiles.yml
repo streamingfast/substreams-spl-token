@@ -1,0 +1,20 @@
+spl_token:
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: ""
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      port: 5432
+      dbname: postgres
+      schema: spl
+    prod:
+      type: postgres
+      host: localhost
+      user: prod_user
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      port: 5432
+      dbname: spl-token
+      schema: spl-token
+
+  target: dev

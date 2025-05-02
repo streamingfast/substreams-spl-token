@@ -1,4 +1,4 @@
 version: v2
 modules:
   - path: ./proto
-    name: buf.build/streamingfast/hivemapper
+    name: buf.build/streamingfast/spl-token
