@@ -11,8 +11,10 @@ protobuf:
   files:
     - sf/solana/v1/spl/type/spl.proto
     - schema/schema.proto
+  descriptorSets:
+    - module: buf.build/streamingfast/substreams-sink-sql
   excludePaths:
-    - sf/substreams
+#    - sf/substreams
     - google
   importPaths:
     - ./proto
@@ -37,3 +39,12 @@ network: solana
 params:
   map_spl_instructions: "spl_token_address=4vMsoUT2BWatFweudnQM1xedRLfJgJ7hswhcpz4xgBTy|spl_token_decimal=9"
   solana_common:transactions_by_programid_and_account_without_votes: "program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA && account:4vMsoUT2BWatFweudnQM1xedRLfJgJ7hswhcpz4xgBTy"
+
+sink:
+  module: map_spl_instructions
+  type: sf.substreams.sink.sql.v1.Service
+  config:
+    dbt_config:
+      files: ./dbt
+      run_interval_seconds: 300
+      enabled: true
