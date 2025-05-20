@@ -7,7 +7,6 @@ pub struct Table {
     pub name: ::prost::alloc::string::String,
     #[prost(string, optional, tag="2")]
     pub child_of: ::core::option::Option<::prost::alloc::string::String>,
-    ///   should be remove
     #[prost(string, tag="81")]
     pub many_to_one_relation_field_name: ::prost::alloc::string::String,
 }

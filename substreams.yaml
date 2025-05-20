@@ -10,7 +10,7 @@ imports:
 protobuf:
   files:
     - sf/solana/v1/spl/type/spl.proto
-    - schema/schema.proto
+    - parquet/options.proto
   descriptorSets:
     - module: buf.build/streamingfast/substreams-sink-sql
   excludePaths:
@@ -47,4 +47,4 @@ sink:
     dbt_config:
       files: ./dbt
       run_interval_seconds: 300
-      enabled: true
+      enabled: false

@@ -1,4 +1,9 @@
 // @generated
+// @@protoc_insertion_point(attribute:parquet)
+pub mod parquet {
+    include!("parquet.rs");
+    // @@protoc_insertion_point(parquet)
+}
 // @@protoc_insertion_point(attribute:schema)
 pub mod schema {
     include!("schema.rs");
@@ -50,6 +55,13 @@ pub mod sf {
                 }
             }
             pub mod sql {
+                pub mod service {
+                    // @@protoc_insertion_point(attribute:sf.substreams.sink.sql.service.v1)
+                    pub mod v1 {
+                        include!("sf.substreams.sink.sql.service.v1.rs");
+                        // @@protoc_insertion_point(sf.substreams.sink.sql.service.v1)
+                    }
+                }
                 // @@protoc_insertion_point(attribute:sf.substreams.sink.sql.v1)
                 pub mod v1 {
                     include!("sf.substreams.sink.sql.v1.rs");
@@ -85,5 +97,12 @@ pub mod sol {
             include!("sol.transactions.v1.rs");
             // @@protoc_insertion_point(sol.transactions.v1)
         }
+    }
+}
+pub mod test {
+    // @@protoc_insertion_point(attribute:test.relations)
+    pub mod relations {
+        include!("test.relations.rs");
+        // @@protoc_insertion_point(test.relations)
     }
 }

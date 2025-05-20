@@ -1,7 +1,8 @@
 syntax = "proto3";
 
 import "google/protobuf/descriptor.proto";
-import "schema/schema.proto";
+import "sf/substreams/sink/sql/schema/v1/schema.proto";
+import "parquet/options.proto";
 
 package sf.solana.spl.v1.type;
 
@@ -26,6 +27,7 @@ message Instruction {
 }
 
 message Transfer {
+  option (parquet.table_name) = "transfers";
   option (schema.table) = {
     name: "transfers"
     child_of: "instructions on instruction_id"
@@ -37,6 +39,7 @@ message Transfer {
 }
 
 message Mint {
+  option (parquet.table_name) = "mints";
   option (schema.table) = {
     name: "mints"
     child_of: "instructions on instruction_id"
@@ -47,6 +50,7 @@ message Mint {
 }
 
 message Burn {
+  option (parquet.table_name) = "burns";
   option (schema.table) = {
     name: "burns"
     child_of: "instructions on instruction_id"
@@ -57,12 +61,13 @@ message Burn {
 }
 
 message InitializedAccount {
+  option (parquet.table_name) = "initialized_accounts";
   option (schema.table) = {
     name: "initialized_accounts"
     child_of: "instructions on instruction_id"
   };
 
-  string account = 1;
+  string account = 1 [(schema.field) = { primary_key: true }];
   string mint = 2;
   string owner = 3;
 }
