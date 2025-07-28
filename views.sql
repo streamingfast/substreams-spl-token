@@ -3,11 +3,11 @@
 -- DROP view derive_accounts;
 -- -----------------------------------------------
 -- -----------------------------------------------
-DROP VIEW mv_all_mints;
-DROP VIEW mv_all_burns;
-DROP VIEW mv_mint_per_month;
-DROP VIEW mv_burn_per_month;
-DROP VIEW mv_supply;
+DROP VIEW IF EXISTS mv_all_mints;
+DROP VIEW IF EXISTS mv_all_burns;
+DROP VIEW IF EXISTS mv_mint_per_month;
+DROP VIEW IF EXISTS mv_burn_per_month;
+DROP VIEW IF EXISTS mv_supply;
 
 -- -----------------------------------------------
 -- -----------------------------------------------
@@ -23,10 +23,10 @@ SELECT b.number    AS block_number,
        i.instruction_id as instruction_id,
        m.to        AS to_derive_address,
        a.owner    AS to_owner_address,
-       m.amount
+       m.amount AS amount
 FROM spl2.mints m
          INNER JOIN instructions i ON i.instruction_id = m.instruction_id
-         INNER JOIN _blocks_ b ON b.number = i.block_number
+         INNER JOIN _blocks_ b ON b.number = i._block_number_
          LEFT JOIN initialized_accounts a ON a.account = m."to";
 
 insert into mv_all_mints
@@ -35,10 +35,10 @@ SELECT b.number    AS block_number,
        i.instruction_id as instruction_id,
        m.to        AS to_derive_address,
        a.owner    AS to_owner_address,
-       m.amount
+       m.amount AS amount
 FROM spl2.mints m
          INNER JOIN spl2.instructions i ON i.instruction_id = m.instruction_id
-         INNER JOIN spl2._blocks_ b ON b.number = i.block_number
+         INNER JOIN spl2._blocks_ b ON b.number = i._block_number_
          LEFT JOIN spl2.initialized_accounts a ON a.account = m."to";
 
 
@@ -56,10 +56,10 @@ SELECT b.number    AS block_number,
        i.instruction_id AS instruction_id,
        br.from     AS from_derive_address,
        a.owner    AS from_owner_address,
-       br.amount
+       br.amount AS amount
 FROM spl2.burns br
          INNER JOIN spl2.instructions i ON i.instruction_id = br.instruction_id
-         INNER JOIN spl2._blocks_ b ON b.number = i.block_number
+         INNER JOIN spl2._blocks_ b ON b.number = i._block_number_
          LEFT JOIN spl2.initialized_accounts a ON a.account = br."from";
 
 insert into mv_all_burns
@@ -68,10 +68,10 @@ SELECT b.number    AS block_number,
        i.instruction_id AS instruction_id,
        br.from     AS from_derive_address,
        a.owner    AS from_owner_address,
-       br.amount
+       br.amount AS amount
 FROM spl2.burns br
          INNER JOIN spl2.instructions i ON i.instruction_id = br.instruction_id
-         INNER JOIN spl2._blocks_ b ON b.number = i.block_number
+         INNER JOIN spl2._blocks_ b ON b.number = i._block_number_
          LEFT JOIN spl2.initialized_accounts a ON a.account = br."from";
 -- -----------------------------------------------
 -- -----------------------------------------------
@@ -136,11 +136,11 @@ select 'total_supply' as stat,
 
 SET use_query_cache = 0;
 select (select max(number) from _blocks_)        block_max,
-       (select max(block_number) from mints)        mints_block_max,
+       (select max(_block_number_) from mints)        mints_block_max,
        (select max(block_number) from mv_all_mints) all_mint_block_max,
        (select count() from mints)        as        mints,
        (select count() from mv_all_mints) as        all_mints,
-       (select max(block_number) from burns)  burns_block_max,
+       (select max(_block_number_) from burns)  burns_block_max,
        (select max(block_number) from mv_all_burns) all_burns_block_max,
        (select count() from burns)        as burns,
        (select count() from mv_all_burns) as all_burns;
@@ -183,17 +183,3 @@ HAVING
     count > 1
 ORDER BY
     count DESC;
-
-
-
-insert into spl2._blocks_ SELECT * FROM spl2._blocks_old;
-
-
-
-CREATE TABLE IF NOT EXISTS spl2._blocks_  (
-                                              number    integer,
-                                              hash      text,
-                                              timestamp timestamp
-)
-    ENGINE = ReplacingMergeTree()
-    PRIMARY KEY (number)

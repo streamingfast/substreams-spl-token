@@ -99,10 +99,3 @@ pub mod sol {
         }
     }
 }
-pub mod test {
-    // @@protoc_insertion_point(attribute:test.relations)
-    pub mod relations {
-        include!("test.relations.rs");
-        // @@protoc_insertion_point(test.relations)
-    }
-}

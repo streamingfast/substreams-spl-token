@@ -13,6 +13,11 @@ message SplInstructions {
 message Instruction {
   option (schema.table) = {
     name: "instructions"
+    clickhouse_table_options: {
+      order_by_fields: [
+        { name: "instruction_id" }
+      ]
+    }
   };
 
   string instruction_id =1 [(schema.field) = { primary_key: true }];
@@ -31,6 +36,11 @@ message Transfer {
   option (schema.table) = {
     name: "transfers"
     child_of: "instructions on instruction_id"
+    clickhouse_table_options: {
+      order_by_fields: [
+        { name: "instruction_id" }
+      ]
+    }
   };
 
   string from = 2;
@@ -43,6 +53,11 @@ message Mint {
   option (schema.table) = {
     name: "mints"
     child_of: "instructions on instruction_id"
+    clickhouse_table_options: {
+      order_by_fields: [
+        { name: "instruction_id" }
+      ]
+    }
   };
 
   string to = 2;
@@ -54,6 +69,11 @@ message Burn {
   option (schema.table) = {
     name: "burns"
     child_of: "instructions on instruction_id"
+    clickhouse_table_options: {
+      order_by_fields: [
+        { name: "instruction_id" }
+      ]
+    }
   };
 
   string from = 2;
@@ -65,6 +85,12 @@ message InitializedAccount {
   option (schema.table) = {
     name: "initialized_accounts"
     child_of: "instructions on instruction_id"
+    clickhouse_table_options: {
+      order_by_fields: [
+        { name: "account" },
+        { name: "instruction_id" }
+      ]
+    }
   };
 
   string account = 1 [(schema.field) = { primary_key: true }];

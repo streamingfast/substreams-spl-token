@@ -8,3 +8,5 @@
 replay.log
 /dbt/target/
 /dbt/logs/
+/cursor.txt
+/spl2_schema_hash.txt

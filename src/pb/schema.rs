@@ -7,8 +7,8 @@ pub struct Table {
     pub name: ::prost::alloc::string::String,
     #[prost(string, optional, tag="2")]
     pub child_of: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, tag="81")]
-    pub many_to_one_relation_field_name: ::prost::alloc::string::String,
+    #[prost(message, optional, tag="200")]
+    pub clickhouse_table_options: ::core::option::Option<ClickhouseTableOptions>,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -21,5 +21,131 @@ pub struct Column {
     pub unique: bool,
     #[prost(bool, tag="4")]
     pub primary_key: bool,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickhouseTableOptions {
+    #[prost(message, repeated, tag="1")]
+    pub order_by_fields: ::prost::alloc::vec::Vec<ClickhouseOrderByField>,
+    #[prost(message, repeated, tag="2")]
+    pub partition_fields: ::prost::alloc::vec::Vec<ClickhousePartitionByField>,
+    #[prost(message, repeated, tag="3")]
+    pub replacing_fields: ::prost::alloc::vec::Vec<ClickhouseReplacingField>,
+    #[prost(message, repeated, tag="4")]
+    pub index_fields: ::prost::alloc::vec::Vec<ClickhouseIndexField>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickhousePartitionByField {
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(enumeration="Function", tag="2")]
+    pub function: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickhouseOrderByField {
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(bool, tag="2")]
+    pub descending: bool,
+    #[prost(enumeration="Function", tag="3")]
+    pub function: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickhouseReplacingField {
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickhouseIndexField {
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag="2")]
+    pub field_name: ::prost::alloc::string::String,
+    #[prost(enumeration="IndexType", tag="3")]
+    pub r#type: i32,
+    #[prost(uint32, tag="4")]
+    pub granularity: u32,
+    #[prost(enumeration="Function", tag="5")]
+    pub function: i32,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum IndexType {
+    Minmax = 0,
+    Set = 1,
+    NgrambfV1 = 2,
+    TokenbfV1 = 3,
+    BloomFilter = 4,
+}
+impl IndexType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IndexType::Minmax => "minmax",
+            IndexType::Set => "set",
+            IndexType::NgrambfV1 => "ngrambf_v1",
+            IndexType::TokenbfV1 => "tokenbf_v1",
+            IndexType::BloomFilter => "bloom_filter",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "minmax" => Some(Self::Minmax),
+            "set" => Some(Self::Set),
+            "ngrambf_v1" => Some(Self::NgrambfV1),
+            "tokenbf_v1" => Some(Self::TokenbfV1),
+            "bloom_filter" => Some(Self::BloomFilter),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Function {
+    Unset = 0,
+    ToYyyymm = 1,
+    ToYyyydd = 2,
+    ToYear = 3,
+    ToMonth = 4,
+    ToDate = 5,
+    ToStartOfMonth = 6,
+}
+impl Function {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Function::Unset => "unset",
+            Function::ToYyyymm => "toYYYYMM",
+            Function::ToYyyydd => "toYYYYDD",
+            Function::ToYear => "toYear",
+            Function::ToMonth => "toMonth",
+            Function::ToDate => "toDate",
+            Function::ToStartOfMonth => "toStartOfMonth",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "unset" => Some(Self::Unset),
+            "toYYYYMM" => Some(Self::ToYyyymm),
+            "toYYYYDD" => Some(Self::ToYyyydd),
+            "toYear" => Some(Self::ToYear),
+            "toMonth" => Some(Self::ToMonth),
+            "toDate" => Some(Self::ToDate),
+            "toStartOfMonth" => Some(Self::ToStartOfMonth),
+            _ => None,
+        }
+    }
 }
 // @@protoc_insertion_point(module)

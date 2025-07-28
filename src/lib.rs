@@ -131,12 +131,14 @@ fn process_inner_instruction(
 ) {
     for inner in compile_instruction.inner_instructions() {
         match inner.program_id().to_string().as_ref() {
-            SOLANA_TOKEN_PROGRAM => match process_token_instruction(output, spl_token_address, spl_token_decimal, &inner, meta) {
-                Err(err) => {
-                    panic!("trx_hash {} process token instructions {}", trx_hash, err);
+            SOLANA_TOKEN_PROGRAM => {
+                match process_token_instruction(output, spl_token_address, spl_token_decimal, &inner, meta) {
+                    Err(err) => {
+                        panic!("trx_hash {} process token instructions {}", trx_hash, err);
+                    }
+                    _ => {}
                 }
-                _ => {}
-            },
+            }
             _ => {}
         }
     }
@@ -154,6 +156,7 @@ fn process_token_instruction(
             return Err(anyhow::anyhow!("unpacking token instruction: {}", err));
         }
         Ok(token_instruction) => match token_instruction {
+            #[allow(deprecated)]
             TokenInstruction::Transfer { amount: amt } => {
                 let authority = &instruction.accounts()[2];
 

@@ -3,6 +3,11 @@ package:
   name: solana-spl-token
   version: v0.1.0
   url: https://github.com/streamingfast/substreams-spl-token
+  description: |
+    Substreams module to extract SPL token instructions from Solana transactions,
+    send them to a Clickhouse sink and with materialized views, allow querying
+    the SPL token transfers and balances and multiple other derived data
+    of SPL tokens.
 
 imports:
   solana_common: https://github.com/streamingfast/substreams-foundational-modules/releases/download/solana-common-v0.3.0/solana-common-v0.3.0.spkg
@@ -14,7 +19,6 @@ protobuf:
   descriptorSets:
     - module: buf.build/streamingfast/substreams-sink-sql
   excludePaths:
-#    - sf/substreams
     - google
   importPaths:
     - ./proto
@@ -22,7 +26,7 @@ protobuf:
 binaries:
   default:
     type: wasm/rust-v1
-    file: target/wasm32-unknown-unknown/release/substreams_hivemapper.wasm
+    file: target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
   - name: map_spl_instructions

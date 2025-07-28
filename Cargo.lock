@@ -141,17 +141,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "getrandom"
-version = "0.2.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7"
-dependencies = [
- "cfg-if",
- "libc",
- "wasi",
-]
-
-[[package]]
 name = "hashbrown"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -526,22 +515,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "substreams-hivemapper"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bs58",
- "getrandom",
- "log",
- "prost",
- "prost-types",
- "substreams",
- "substreams-solana",
- "substreams-solana-program-instructions",
- "thiserror",
-]
-
-[[package]]
 name = "substreams-macro"
 version = "0.5.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -593,6 +566,21 @@ dependencies = [
  "anyhow",
  "num_enum",
  "substreams",
+]
+
+[[package]]
+name = "substreams-spl-token"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bs58",
+ "log",
+ "prost",
+ "prost-types",
+ "substreams",
+ "substreams-solana",
+ "substreams-solana-program-instructions",
+ "thiserror",
 ]
 
 [[package]]
@@ -696,12 +684,6 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
-
-[[package]]
-name = "wasi"
-version = "0.11.0+wasi-snapshot-preview1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 
 [[package]]
 name = "which"

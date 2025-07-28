@@ -1,18 +1,12 @@
 [package]
-name = "substreams-hivemapper"
+name = "substreams-spl-token"
 version = "0.1.0"
-description = "Hivemapper Substreams"
+description = "Substreams for SPL Token (Analytics, Transfers, Balances)"
 edition = "2021"
-
-[features]
-
-[profile.release]
-lto = true
-opt-level = "z"
-strip = "debuginfo"
 
 [lib]
 crate-type = ["cdylib"]
+name = "substreams"
 
 [dependencies]
 bs58 = "0.4.0"
@@ -25,6 +19,7 @@ thiserror = "1.0.25"
 anyhow = "1.0.72"
 log = "0.4.22"
 
-
-[target.wasm32-unknown-unknown.dependencies]
-getrandom = { version = "0.2", features = ["custom"] }
+[profile.release]
+lto = true
+opt-level = "z"
+strip = "debuginfo"
