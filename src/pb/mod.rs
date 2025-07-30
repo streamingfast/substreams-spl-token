@@ -1,9 +1,4 @@
 // @generated
-// @@protoc_insertion_point(attribute:parquet)
-pub mod parquet {
-    include!("parquet.rs");
-    // @@protoc_insertion_point(parquet)
-}
 // @@protoc_insertion_point(attribute:schema)
 pub mod schema {
     include!("schema.rs");

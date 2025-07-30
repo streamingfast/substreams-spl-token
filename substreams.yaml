@@ -15,7 +15,6 @@ imports:
 protobuf:
   files:
     - sf/solana/v1/spl/type/spl.proto
-    - parquet/options.proto
   descriptorSets:
     - module: buf.build/streamingfast/substreams-sink-sql
   excludePaths:
