@@ -11,3 +11,4 @@ replay.log
 /cursor.txt
 /spl2_schema_hash.txt
 src/pb/.last_generated_hash
+/dist
