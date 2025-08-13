@@ -10,7 +10,7 @@ package:
     of SPL tokens.
 
 imports:
-  solana_common: https://github.com/streamingfast/substreams-foundational-modules/releases/download/solana-common-v0.3.0/solana-common-v0.3.0.spkg
+  solana_common: solana-common@v0.3.0
 
 protobuf:
   files:
