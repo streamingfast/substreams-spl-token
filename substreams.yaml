@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: solana-spl-token
-  version: v0.1.0
+  version: v0.1.1
   url: https://github.com/streamingfast/substreams-spl-token
   description: |
     Substreams module to extract SPL token instructions from Solana transactions,
