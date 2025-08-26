@@ -44,6 +44,9 @@ message Transfer {
   string from = 2;
   string to = 3;
   double amount = 4;
+
+  string from_owner = 5;
+  string to_owner = 6;
 }
 
 message Mint {
@@ -58,7 +61,10 @@ message Mint {
   };
 
   string to = 2;
+
   double amount = 3;
+
+  string to_owner = 4;
 }
 
 message Burn {
@@ -74,6 +80,8 @@ message Burn {
 
   string from = 2;
   double amount = 3;
+
+  string from_owner = 4;
 }
 
 message InitializedAccount {

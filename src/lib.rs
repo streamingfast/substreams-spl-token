@@ -1,11 +1,19 @@
 mod constants;
 mod pb;
 
+use substreams_solana::pb::sf::solana::r#type::v1::Block;
 use crate::pb::sf::solana::spl::v1::r#type::instruction::Item;
 use crate::pb::sf::solana::spl::v1::r#type::{Burn, InitializedAccount, Instruction, Mint, SplInstructions, Transfer};
 use pb::sol::transactions::v1::Transactions as solTransactions;
+use std::collections::HashMap;
 use std::ops::Div;
 use substreams::errors::Error;
+use prost::Message;
+
+use substreams::pb::foundational_store::ResponseCode;
+use pb::sf::solana::spl::foundational::v1::AccountOwner;
+use substreams::store::FoundationalStore;
+
 use substreams_solana::block_view::InstructionView;
 use substreams_solana::pb::sf::solana::r#type::v1::{ConfirmedTransaction, TokenBalance, TransactionStatusMeta};
 use substreams_solana::Address;
@@ -40,7 +48,7 @@ impl OutputInstructions {
 }
 
 #[substreams::handlers::map]
-fn map_spl_instructions(params: String, transactions: solTransactions) -> Result<SplInstructions, Error> {
+fn map_spl_instructions(params: String, transactions: solTransactions, block: Block, foundational_store: FoundationalStore) -> Result<SplInstructions, Error> {
     let mut instructions: Vec<Instruction> = vec![];
 
     let mut spl_token_address = String::new();
@@ -73,7 +81,96 @@ fn map_spl_instructions(params: String, transactions: solTransactions) -> Result
 
         instructions.extend(output_instructions.instructions);
     }
+
+    let mut accounts_to_lookup = Vec::<Vec<u8>>::new();
+
+    for instruction in &instructions {
+        if let Some(ref item) = instruction.item {
+            match item {
+                Item::Transfer(transfer) => {
+                    if let Ok(from_bytes) = bs58::decode(&transfer.from).into_vec() {
+                        accounts_to_lookup.push(from_bytes);
+                    }
+                    if let Ok(to_bytes) = bs58::decode(&transfer.to).into_vec() {
+                        accounts_to_lookup.push(to_bytes);
+                    }
+                }
+                Item::Mint(mint) => {
+                    if let Ok(to_bytes) = bs58::decode(&mint.to).into_vec() {
+                        accounts_to_lookup.push(to_bytes);
+                    }
+                }
+                Item::Burn(burn) => {
+                    if let Ok(from_bytes) = bs58::decode(&burn.from).into_vec() {
+                        accounts_to_lookup.push(from_bytes);
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    // Remove duplicates, better way ?
+    accounts_to_lookup.sort();
+    accounts_to_lookup.dedup();
+
+    let block_hash_bytes = bs58::decode(&block.blockhash).into_vec().unwrap_or_default();
+    let owners = get_account_owners_all(&foundational_store, &accounts_to_lookup, &block_hash_bytes, block.slot);
+
+    for instruction in &mut instructions {
+        if let Some(ref mut item) = instruction.item {
+            match item {
+                Item::Transfer(ref mut transfer) => {
+                    if let Some(from_owner) = owners.get(&transfer.from) {
+                        transfer.from_owner = from_owner.clone();
+                    }
+                    if let Some(to_owner) = owners.get(&transfer.to) {
+                        transfer.to_owner = to_owner.clone();
+                    }
+                }
+                Item::Mint(ref mut mint) => {
+                    if let Some(to_owner) = owners.get(&mint.to) {
+                        mint.to_owner = to_owner.clone();
+                    }
+                }
+                Item::Burn(ref mut burn) => {
+                    if let Some(from_owner) = owners.get(&burn.from) {
+                        burn.from_owner = from_owner.clone();
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
     Ok(SplInstructions { instructions })
+}
+
+fn get_account_owners_all(
+    foundational_store: &FoundationalStore,
+    accounts: &[Vec<u8>],
+    block_hash: &[u8],
+    block_slot: u64,
+) -> HashMap<String, String> {
+    let mut results = HashMap::with_capacity(accounts.len());
+    if accounts.is_empty() {
+        return results;
+    }
+
+    let resp = foundational_store.get_all(block_hash, block_slot, accounts);
+
+    for entry in resp.entries {
+        let Some(get_response) = entry.response else { continue; };
+        if get_response.response != ResponseCode::Found as i32 { continue; }
+        let Some(value) = get_response.value else { continue; };
+        let Ok(account_owner) = AccountOwner::decode(value.value.as_slice()) else { continue; };
+
+        let owner_b58 = bs58::encode(&account_owner.owner).into_string();
+        let account_b58 = bs58::encode(&entry.key).into_string();
+        results.insert(account_b58, owner_b58);
+    }
+
+    results
 }
 
 /// Iterates over successful transactions in given block and take ownership.
@@ -171,6 +268,8 @@ fn process_token_instruction(
                         from: source.to_string(),
                         to: destination.to_string(),
                         amount: amount_to_decimals(amt as f64, spl_token_decimal as f64),
+                        from_owner: String::new(),
+                        to_owner: String::new(),
                     }));
                 }
             }
@@ -188,6 +287,8 @@ fn process_token_instruction(
                         from: source.to_string(),
                         to: destination.to_string(),
                         amount: amount_to_decimals(amt as f64, spl_token_decimal as f64),
+                        from_owner: String::new(),
+                        to_owner: String::new(),
                     }));
                 }
             }
@@ -202,6 +303,7 @@ fn process_token_instruction(
                 output.add(Item::Mint(Mint {
                     to: account_to.to_string(),
                     amount: amount_to_decimals(amt as f64, spl_token_decimal as f64),
+                    to_owner: String::new(),
                 }));
             }
 
@@ -215,6 +317,7 @@ fn process_token_instruction(
                 output.add(Item::Burn(Burn {
                     from: account_from.to_string(),
                     amount: amount_to_decimals(amt as f64, spl_token_decimal as f64),
+                    from_owner: String::new(),
                 }));
             }
             TokenInstruction::InitializeAccount {} => {
@@ -266,3 +369,4 @@ pub fn is_token_transfer(spl_token_address: &str, pre_token_balances: &Vec<Token
     }
     false
 }
+

@@ -14,6 +14,13 @@ pub mod sf {
             }
         }
         pub mod spl {
+            pub mod foundational {
+                // @@protoc_insertion_point(attribute:sf.solana.spl.foundational.v1)
+                pub mod v1 {
+                    include!("sf.solana.spl.foundational.v1.rs");
+                    // @@protoc_insertion_point(sf.solana.spl.foundational.v1)
+                }
+            }
             pub mod v1 {
                 // @@protoc_insertion_point(attribute:sf.solana.spl.v1.type)
                 pub mod r#type {

@@ -165,15 +165,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ebdb29d2ea9ed0083cd8cece49bbd968021bd99b0849edb4a9a7ee0fdf6a4e0"
 
 [[package]]
-name = "home"
-version = "0.5.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e3d1354bf6b7235cb4a0576c2619fd4ed18183f689b12b006a0ee7329eeff9a5"
-dependencies = [
- "windows-sys 0.52.0",
-]
-
-[[package]]
 name = "indexmap"
 version = "2.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -191,12 +182,6 @@ checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
 dependencies = [
  "either",
 ]
-
-[[package]]
-name = "lazy_static"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
@@ -274,7 +259,7 @@ dependencies = [
  "proc-macro-crate",
  "proc-macro2",
  "quote",
- "syn 2.0.75",
+ "syn 2.0.87",
 ]
 
 [[package]]
@@ -323,7 +308,7 @@ dependencies = [
  "pest_meta",
  "proc-macro2",
  "quote",
- "syn 2.0.75",
+ "syn 2.0.87",
 ]
 
 [[package]]
@@ -349,12 +334,12 @@ dependencies = [
 
 [[package]]
 name = "prettyplease"
-version = "0.1.25"
+version = "0.2.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c8646e95016a7a6c4adea95bafa8a16baab64b583356217f2c85db4a39d9a86"
+checksum = "64d1ec885c64d0457d564db4ec299b2dae3f9c02808b8ad9c3a089c591b18033"
 dependencies = [
  "proc-macro2",
- "syn 1.0.109",
+ "syn 2.0.87",
 ]
 
 [[package]]
@@ -377,9 +362,9 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.11.9"
+version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b82eaa1d779e9a4bc1c3217db8ffbeabaae1dca241bf70183242128d48681cd"
+checksum = "2796faa41db3ec313a31f7624d9286acf277b52de526150b7e69f3debf891ee5"
 dependencies = [
  "bytes",
  "prost-derive",
@@ -387,44 +372,42 @@ dependencies = [
 
 [[package]]
 name = "prost-build"
-version = "0.11.9"
+version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "119533552c9a7ffacc21e099c24a0ac8bb19c2a2a3f363de84cd9b844feab270"
+checksum = "be769465445e8c1474e9c5dac2018218498557af32d9ed057325ec9a41ae81bf"
 dependencies = [
- "bytes",
  "heck",
  "itertools",
- "lazy_static",
  "log",
  "multimap",
+ "once_cell",
  "petgraph",
  "prettyplease",
  "prost",
  "prost-types",
  "regex",
- "syn 1.0.109",
+ "syn 2.0.87",
  "tempfile",
- "which",
 ]
 
 [[package]]
 name = "prost-derive"
-version = "0.11.9"
+version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5d2d8d10f3c6ded6da8b05b5fb3b8a5082514344d56c9f871412d29b4e075b4"
+checksum = "8a56d757972c98b346a9b766e3f02746cde6dd1cd1d1d563472929fdd74bec4d"
 dependencies = [
  "anyhow",
  "itertools",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.87",
 ]
 
 [[package]]
 name = "prost-types"
-version = "0.11.9"
+version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "213622a1460818959ac1181aaeb2dc9c7f63df720db7d788b3e24eacd1983e13"
+checksum = "52c2c1bf36ddb1a1c396b3601a3cec27c2462e45f07c386894ec3ccf5332bd16"
 dependencies = [
  "prost",
 ]
@@ -493,9 +476,7 @@ dependencies = [
 
 [[package]]
 name = "substreams"
-version = "0.5.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0639e6552e6ade9125122a57474c39fd2a626c520a6f49f73351698ffd838f49"
+version = "0.6.1"
 dependencies = [
  "anyhow",
  "bigdecimal",
@@ -516,9 +497,7 @@ dependencies = [
 
 [[package]]
 name = "substreams-macro"
-version = "0.5.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd4f708b3bcf08a8045992d62d26f1d234cbb2a76f44a315595331c45d6944f5"
+version = "0.6.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -528,8 +507,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-solana"
-version = "0.13.0"
-source = "git+https://github.com/streamingfast/substreams-solana?branch=release/0.13.0#7bfb39f5751e7f76a643be6f34d6a0dad658f09f"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9bc14193c089465f3318be2215a90803e0bf2f16477557142648dbbe451ad6bc"
 dependencies = [
  "anyhow",
  "num_enum",
@@ -540,8 +520,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-solana-core"
-version = "0.13.0"
-source = "git+https://github.com/streamingfast/substreams-solana?branch=release/0.13.0#7bfb39f5751e7f76a643be6f34d6a0dad658f09f"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d858d6d9568136744ee82cf0bd01a3f610a4a929b801b40b1934b6199c723520"
 dependencies = [
  "bs58",
  "prost",
@@ -551,17 +532,18 @@ dependencies = [
 
 [[package]]
 name = "substreams-solana-macro"
-version = "0.13.0"
-source = "git+https://github.com/streamingfast/substreams-solana?branch=release/0.13.0#7bfb39f5751e7f76a643be6f34d6a0dad658f09f"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d28bba84dc05f4644ef9d1505162c4628f8fce2436bb15c047d0df3911dad142"
 dependencies = [
  "bs58",
 ]
 
 [[package]]
 name = "substreams-solana-program-instructions"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2d2eac3fee28a079bd3af5573bb6d43cf9667d89ce577fc7dd40113bb31e9e1"
+checksum = "e0c565ef42584f4468df9b5146fb460ef46ec3d777642451ccff83c5032b390e"
 dependencies = [
  "anyhow",
  "num_enum",
@@ -596,9 +578,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.75"
+version = "2.0.87"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f6af063034fc1935ede7be0122941bafa9bacb949334d090b77ca98b5817c7d9"
+checksum = "25aa4ce346d03a6dcd68dd8b4010bcb74e54e62c90c573f394c46eae99aba32d"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -635,7 +617,7 @@ checksum = "a4558b58466b9ad7ca0f102865eccc95938dca1a74a856f2b57b6629050da261"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.75",
+ "syn 2.0.87",
 ]
 
 [[package]]
@@ -684,18 +666,6 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
-
-[[package]]
-name = "which"
-version = "4.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87ba24419a2078cd2b0f2ede2691b6c66d8e47836da3b6db8265ebad47afbfc7"
-dependencies = [
- "either",
- "home",
- "once_cell",
- "rustix",
-]
 
 [[package]]
 name = "windows-sys"

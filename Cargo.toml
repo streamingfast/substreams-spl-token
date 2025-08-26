@@ -10,11 +10,11 @@ name = "substreams"
 
 [dependencies]
 bs58 = "0.4.0"
-prost = "0.11"
-prost-types = "0.11"
-substreams = "^0.5.0"
-substreams-solana = { git = "https://github.com/streamingfast/substreams-solana", branch = "release/0.13.0" }
-substreams-solana-program-instructions = "0.1"
+prost = "0.13.3"
+prost-types = "0.13.3"
+substreams = "0.6.0"
+substreams-solana = "0.14.1"
+substreams-solana-program-instructions = "0.2.0"
 thiserror = "1.0.25"
 anyhow = "1.0.72"
 log = "0.4.22"
@@ -23,3 +23,7 @@ log = "0.4.22"
 lto = true
 opt-level = "z"
 strip = "debuginfo"
+
+[patch.crates-io]
+substreams = { path = "../substreams-rs/substreams" }
+substreams-macro = { path = "../substreams-rs/substreams-macro" }

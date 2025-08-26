@@ -40,6 +40,10 @@ pub struct Transfer {
     pub to: ::prost::alloc::string::String,
     #[prost(double, tag="4")]
     pub amount: f64,
+    #[prost(string, tag="5")]
+    pub from_owner: ::prost::alloc::string::String,
+    #[prost(string, tag="6")]
+    pub to_owner: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -48,6 +52,8 @@ pub struct Mint {
     pub to: ::prost::alloc::string::String,
     #[prost(double, tag="3")]
     pub amount: f64,
+    #[prost(string, tag="4")]
+    pub to_owner: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -56,6 +62,8 @@ pub struct Burn {
     pub from: ::prost::alloc::string::String,
     #[prost(double, tag="3")]
     pub amount: f64,
+    #[prost(string, tag="4")]
+    pub from_owner: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]

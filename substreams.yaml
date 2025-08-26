@@ -12,6 +12,7 @@ package:
 
 imports:
   solana_common: solana-common@v0.3.0
+  spl_owner_foundational: ../substreams-foundational-modules/solana-spl-owner-foundational-store
 
 protobuf:
   files:
@@ -35,6 +36,10 @@ modules:
     inputs:
       - params: string
       - map: solana_common:transactions_by_programid_and_account_without_votes
+      - source: sf.solana.type.v1.Block
+      # - foundational-store: account-owners@v1.0.0
+      - foundational-store: grpc://foundational-store.sol-mainnet:10016
+      # - foundational-store: grpc://localhost:50051
     output:
       type: proto:sf.solana.spl.v1.type.SplInstructions
 
