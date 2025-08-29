@@ -521,8 +521,6 @@ dependencies = [
 [[package]]
 name = "substreams-solana-core"
 version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d858d6d9568136744ee82cf0bd01a3f610a4a929b801b40b1934b6199c723520"
 dependencies = [
  "bs58",
  "prost",

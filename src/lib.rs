@@ -5,17 +5,17 @@ use substreams_solana::pb::sf::solana::r#type::v1::Block;
 use crate::pb::sf::solana::spl::v1::r#type::instruction::Item;
 use crate::pb::sf::solana::spl::v1::r#type::{Burn, InitializedAccount, Instruction, Mint, SplInstructions, Transfer};
 use pb::sol::transactions::v1::Transactions as solTransactions;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ops::Div;
 use substreams::errors::Error;
 use prost::Message;
 
 use substreams::pb::foundational_store::ResponseCode;
-use pb::sf::solana::spl::foundational::v1::AccountOwner;
+use crate::pb::sf::substreams::solana::spl::v1::{AccountOwner};
 use substreams::store::FoundationalStore;
 
 use substreams_solana::block_view::InstructionView;
-use substreams_solana::pb::sf::solana::r#type::v1::{ConfirmedTransaction, TokenBalance, TransactionStatusMeta};
+use substreams_solana::pb::sf::solana::r#type::v1::{ConfirmedTransaction, TransactionStatusMeta, TokenBalance};
 use substreams_solana::Address;
 use substreams_solana_program_instructions::token_instruction_2022::TokenInstruction;
 
@@ -82,40 +82,28 @@ fn map_spl_instructions(params: String, transactions: solTransactions, block: Bl
         instructions.extend(output_instructions.instructions);
     }
 
-    let mut accounts_to_lookup = Vec::<Vec<u8>>::new();
+    let mut accounts_to_lookup = HashSet::<String>::new();
 
     for instruction in &instructions {
         if let Some(ref item) = instruction.item {
             match item {
                 Item::Transfer(transfer) => {
-                    if let Ok(from_bytes) = bs58::decode(&transfer.from).into_vec() {
-                        accounts_to_lookup.push(from_bytes);
-                    }
-                    if let Ok(to_bytes) = bs58::decode(&transfer.to).into_vec() {
-                        accounts_to_lookup.push(to_bytes);
-                    }
+                    accounts_to_lookup.insert(transfer.from.clone());
+                    accounts_to_lookup.insert(transfer.to.clone());
                 }
                 Item::Mint(mint) => {
-                    if let Ok(to_bytes) = bs58::decode(&mint.to).into_vec() {
-                        accounts_to_lookup.push(to_bytes);
-                    }
+                    accounts_to_lookup.insert(mint.to.clone());
                 }
                 Item::Burn(burn) => {
-                    if let Ok(from_bytes) = bs58::decode(&burn.from).into_vec() {
-                        accounts_to_lookup.push(from_bytes);
-                    }
+                    accounts_to_lookup.insert(burn.from.clone());
                 }
                 _ => {}
             }
         }
     }
 
-    // Remove duplicates, better way ?
-    accounts_to_lookup.sort();
-    accounts_to_lookup.dedup();
-
     let block_hash_bytes = bs58::decode(&block.blockhash).into_vec().unwrap_or_default();
-    let owners = get_account_owners_all(&foundational_store, &accounts_to_lookup, &block_hash_bytes, block.slot);
+    let owners = resolve_account_owners(&foundational_store, &accounts_to_lookup, &block_hash_bytes, block.slot);
 
     for instruction in &mut instructions {
         if let Some(ref mut item) = instruction.item {
@@ -146,9 +134,9 @@ fn map_spl_instructions(params: String, transactions: solTransactions, block: Bl
     Ok(SplInstructions { instructions })
 }
 
-fn get_account_owners_all(
+fn resolve_account_owners(
     foundational_store: &FoundationalStore,
-    accounts: &[Vec<u8>],
+    accounts: &HashSet<String>,
     block_hash: &[u8],
     block_slot: u64,
 ) -> HashMap<String, String> {
@@ -157,7 +145,12 @@ fn get_account_owners_all(
         return results;
     }
 
-    let resp = foundational_store.get_all(block_hash, block_slot, accounts);
+    let account_bytes: Vec<Vec<u8>> = accounts
+        .iter()
+        .filter_map(|account| bs58::decode(account).into_vec().ok())
+        .collect();
+
+    let resp = foundational_store.get_all(block_hash, block_slot, &account_bytes);
 
     for entry in resp.entries {
         let Some(get_response) = entry.response else { continue; };
@@ -165,8 +158,8 @@ fn get_account_owners_all(
         let Some(value) = get_response.value else { continue; };
         let Ok(account_owner) = AccountOwner::decode(value.value.as_slice()) else { continue; };
 
-        let owner_b58 = bs58::encode(&account_owner.owner).into_string();
         let account_b58 = bs58::encode(&entry.key).into_string();
+        let owner_b58 = bs58::encode(&account_owner.owner).into_string();
         results.insert(account_b58, owner_b58);
     }
 

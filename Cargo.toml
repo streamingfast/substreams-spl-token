@@ -27,3 +27,4 @@ strip = "debuginfo"
 [patch.crates-io]
 substreams = { path = "../substreams-rs/substreams" }
 substreams-macro = { path = "../substreams-rs/substreams-macro" }
+substreams-solana = { path = "../substreams-solana/core", package = "substreams-solana-core" }

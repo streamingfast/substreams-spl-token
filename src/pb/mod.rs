@@ -5,6 +5,13 @@ pub mod schema {
     // @@protoc_insertion_point(schema)
 }
 pub mod sf {
+    pub mod firehose {
+        // @@protoc_insertion_point(attribute:sf.firehose.v2)
+        pub mod v2 {
+            include!("sf.firehose.v2.rs");
+            // @@protoc_insertion_point(sf.firehose.v2)
+        }
+    }
     pub mod solana {
         pub mod r#type {
             // @@protoc_insertion_point(attribute:sf.solana.type.v1)
@@ -14,13 +21,6 @@ pub mod sf {
             }
         }
         pub mod spl {
-            pub mod foundational {
-                // @@protoc_insertion_point(attribute:sf.solana.spl.foundational.v1)
-                pub mod v1 {
-                    include!("sf.solana.spl.foundational.v1.rs");
-                    // @@protoc_insertion_point(sf.solana.spl.foundational.v1)
-                }
-            }
             pub mod v1 {
                 // @@protoc_insertion_point(attribute:sf.solana.spl.v1.type)
                 pub mod r#type {
@@ -29,16 +29,37 @@ pub mod sf {
                 }
             }
         }
+        pub mod transforms {
+            // @@protoc_insertion_point(attribute:sf.solana.transforms.v1)
+            pub mod v1 {
+                include!("sf.solana.transforms.v1.rs");
+                // @@protoc_insertion_point(sf.solana.transforms.v1)
+            }
+        }
     }
     // @@protoc_insertion_point(attribute:sf.substreams)
     pub mod substreams {
         include!("sf.substreams.rs");
         // @@protoc_insertion_point(sf.substreams)
+        pub mod foundational_store {
+            // @@protoc_insertion_point(attribute:sf.substreams.foundational_store.v1)
+            pub mod v1 {
+                include!("sf.substreams.foundational_store.v1.rs");
+                // @@protoc_insertion_point(sf.substreams.foundational_store.v1)
+            }
+        }
         pub mod index {
             // @@protoc_insertion_point(attribute:sf.substreams.index.v1)
             pub mod v1 {
                 include!("sf.substreams.index.v1.rs");
                 // @@protoc_insertion_point(sf.substreams.index.v1)
+            }
+        }
+        pub mod internal {
+            // @@protoc_insertion_point(attribute:sf.substreams.internal.v2)
+            pub mod v2 {
+                include!("sf.substreams.internal.v2.rs");
+                // @@protoc_insertion_point(sf.substreams.internal.v2)
             }
         }
         pub mod rpc {
@@ -72,6 +93,20 @@ pub mod sf {
             }
         }
         pub mod solana {
+            pub mod r#type {
+                // @@protoc_insertion_point(attribute:sf.substreams.solana.type.v1)
+                pub mod v1 {
+                    include!("sf.substreams.solana.type.v1.rs");
+                    // @@protoc_insertion_point(sf.substreams.solana.type.v1)
+                }
+            }
+            pub mod spl {
+                // @@protoc_insertion_point(attribute:sf.substreams.solana.spl.v1)
+                pub mod v1 {
+                    include!("sf.substreams.solana.spl.v1.rs");
+                    // @@protoc_insertion_point(sf.substreams.solana.spl.v1)
+                }
+            }
             // @@protoc_insertion_point(attribute:sf.substreams.solana.v1)
             pub mod v1 {
                 include!("sf.substreams.solana.v1.rs");
