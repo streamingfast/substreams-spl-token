@@ -35,7 +35,6 @@ modules:
     inputs:
       - params: string
       - map: solana_common:transactions_by_programid_and_account_without_votes
-      - source: sf.solana.type.v1.Block
       # - foundational-store: account-owners@v1.0.0
       # - foundational-store: grpc://foundational-store.sol-mainnet:10016
       - foundational-store: grpc://localhost:50051

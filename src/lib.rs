@@ -1,7 +1,6 @@
 mod constants;
 mod pb;
 
-use substreams_solana::pb::sf::solana::r#type::v1::Block;
 use crate::pb::sf::solana::spl::v1::r#type::instruction::Item;
 use crate::pb::sf::solana::spl::v1::r#type::{Burn, InitializedAccount, Instruction, Mint, SplInstructions, Transfer};
 use pb::sol::transactions::v1::Transactions as solTransactions;
@@ -9,6 +8,7 @@ use std::collections::{HashMap, HashSet};
 use std::ops::Div;
 use substreams::errors::Error;
 use prost::Message;
+
 
 use substreams::pb::foundational_store::ResponseCode;
 use crate::pb::sf::substreams::solana::spl::v1::{AccountOwner};
@@ -48,7 +48,7 @@ impl OutputInstructions {
 }
 
 #[substreams::handlers::map]
-fn map_spl_instructions(params: String, transactions: solTransactions, block: Block, foundational_store: FoundationalStore) -> Result<SplInstructions, Error> {
+fn map_spl_instructions(params: String, transactions: solTransactions, foundational_store: FoundationalStore) -> Result<SplInstructions, Error> {
     let mut instructions: Vec<Instruction> = vec![];
 
     let mut spl_token_address = String::new();
@@ -102,8 +102,7 @@ fn map_spl_instructions(params: String, transactions: solTransactions, block: Bl
         }
     }
 
-    let block_hash_bytes = bs58::decode(&block.blockhash).into_vec().unwrap_or_default();
-    let owners = resolve_account_owners(&foundational_store, &accounts_to_lookup, &block_hash_bytes, block.slot);
+    let owners = resolve_account_owners(&foundational_store, &accounts_to_lookup);
 
     for instruction in &mut instructions {
         if let Some(ref mut item) = instruction.item {
@@ -137,8 +136,6 @@ fn map_spl_instructions(params: String, transactions: solTransactions, block: Bl
 fn resolve_account_owners(
     foundational_store: &FoundationalStore,
     accounts: &HashSet<String>,
-    block_hash: &[u8],
-    block_slot: u64,
 ) -> HashMap<String, String> {
     let mut results = HashMap::with_capacity(accounts.len());
     if accounts.is_empty() {
@@ -150,7 +147,7 @@ fn resolve_account_owners(
         .filter_map(|account| bs58::decode(account).into_vec().ok())
         .collect();
 
-    let resp = foundational_store.get_all(block_hash, block_slot, &account_bytes);
+    let resp = foundational_store.get_all(&account_bytes);
 
     for entry in resp.entries {
         let Some(get_response) = entry.response else { continue; };
