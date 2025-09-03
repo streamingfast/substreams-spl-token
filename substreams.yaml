@@ -12,7 +12,7 @@ package:
 
 imports:
   solana_common: solana-common@v0.3.0
-  spl_owner_foundational: ../substreams-foundational-modules/solana-accounts-common/solana-accounts-foundational-v0.1.1.spkg
+  spl_owner_foundational: https://github.com/streamingfast/substreams-foundational-modules/releases/download/solana-accounts-foundational-v0.1.2/spl-initialized-account-v0.1.2.spkg
 protobuf:
   files:
     - sf/solana/v1/spl/type/spl.proto
@@ -35,9 +35,7 @@ modules:
     inputs:
       - params: string
       - map: solana_common:transactions_by_programid_and_account_without_votes
-      # - foundational-store: account-owners@v1.0.0
-      # - foundational-store: grpc://foundational-store.sol-mainnet:10016
-      - foundational-store: grpc://localhost:50051
+      - foundational-store: spl-initialized-account@v0.1.2
     output:
       type: proto:sf.solana.spl.v1.type.SplInstructions
 

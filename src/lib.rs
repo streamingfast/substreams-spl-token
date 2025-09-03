@@ -10,7 +10,7 @@ use substreams::errors::Error;
 use prost::Message;
 
 
-use substreams::pb::foundational_store::ResponseCode;
+use pb::sf::substreams::foundational_store::v1::ResponseCode;
 use crate::pb::sf::substreams::solana::spl::v1::{AccountOwner};
 use substreams::store::FoundationalStore;
 

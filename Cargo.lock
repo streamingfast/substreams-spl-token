@@ -476,7 +476,9 @@ dependencies = [
 
 [[package]]
 name = "substreams"
-version = "0.6.1"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "571864dde50a7879ab53d75253a9660768749b3e10fe610ab732d2e5b3a5c078"
 dependencies = [
  "anyhow",
  "bigdecimal",
@@ -497,7 +499,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-macro"
-version = "0.6.1"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d11da9c47f7ebcf4b218eca649a5f5b9b3c2f25a66ffb80858ef785ca5ca5e7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -521,6 +525,8 @@ dependencies = [
 [[package]]
 name = "substreams-solana-core"
 version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d858d6d9568136744ee82cf0bd01a3f610a4a929b801b40b1934b6199c723520"
 dependencies = [
  "bs58",
  "prost",
