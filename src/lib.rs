@@ -9,7 +9,6 @@ use std::ops::Div;
 use substreams::errors::Error;
 use prost::Message;
 
-
 use pb::sf::substreams::foundational_store::v1::ResponseCode;
 use crate::pb::sf::substreams::solana::spl::v1::{AccountOwner};
 use substreams::store::FoundationalStore;
