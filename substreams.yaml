@@ -12,6 +12,7 @@ package:
 
 imports:
   solana_common: solana-common@v0.3.0
+  # spl_owner_foundational: spl-initialized-account@v0.1.2
   spl_owner_foundational: https://github.com/streamingfast/substreams-foundational-modules/releases/download/solana-accounts-foundational-v0.1.2/spl-initialized-account-v0.1.2.spkg
 protobuf:
   files:
