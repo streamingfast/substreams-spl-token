@@ -12,16 +12,28 @@ package:
 
 imports:
   solana_common: solana-common@v0.3.0
-  spl_owner_foundational: spl-initialized-account@v0.1.2
+  spl_initialized_account: spl-initialized-account@v0.1.2
+
 protobuf:
   files:
     - sf/solana/v1/spl/type/spl.proto
   descriptorSets:
     - module: buf.build/streamingfast/substreams-sink-sql
-  excludePaths:
-    - google
   importPaths:
     - ./proto
+  excludePaths:
+   - google
+   - sf/firehose/
+   - sf/solana/type
+   - sf/substreams/foundational-store
+   - sf/substreams/index
+   - sf/substreams/internal
+   - sf/substreams/options.proto
+   - sf/substreams/rpc
+   - sf/substreams/sink
+   - sf/substreams/v1
+   - instructions.proto
+   - transactions.proto
 
 binaries:
   default:

@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.1.3
 
-* Extracts SPL token transfers, mints, burns, and account initializations from Solana transactions
-* Resolves account owners for all token operations
+* Extracts SPL token transfers, mints, burns, and account initializations from Solana transactions.
+* Resolves account owners for all token operations.
 
 ## 0.1.2
 

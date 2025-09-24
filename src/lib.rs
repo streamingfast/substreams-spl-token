@@ -1,20 +1,19 @@
 mod constants;
 mod pb;
 
-use crate::pb::sf::solana::spl::v1::r#type::instruction::Item;
-use crate::pb::sf::solana::spl::v1::r#type::{Burn, InitializedAccount, Instruction, Mint, SplInstructions, Transfer};
-use pb::sol::transactions::v1::Transactions as solTransactions;
+use crate::pb::sf::solana::spl::v1::r#type::{
+    instruction::Item, Burn, InitializedAccount, Instruction, Mint, SplInstructions, Transfer,
+};
+use crate::pb::sf::substreams::solana::spl::v1::AccountOwner;
+use pb::sf::substreams::solana::v1::Transactions as SolanaTransactions;
+use prost::Message;
 use std::collections::{HashMap, HashSet};
 use std::ops::Div;
 use substreams::errors::Error;
-use prost::Message;
-
-use pb::sf::substreams::foundational_store::v1::ResponseCode;
-use crate::pb::sf::substreams::solana::spl::v1::{AccountOwner};
+use substreams::pb::sf::substreams::foundational_store::v1::ResponseCode;
 use substreams::store::FoundationalStore;
-
 use substreams_solana::block_view::InstructionView;
-use substreams_solana::pb::sf::solana::r#type::v1::{ConfirmedTransaction, TransactionStatusMeta, TokenBalance};
+use substreams_solana::pb::sf::solana::r#type::v1::{ConfirmedTransaction, TokenBalance, TransactionStatusMeta};
 use substreams_solana::Address;
 use substreams_solana_program_instructions::token_instruction_2022::TokenInstruction;
 
@@ -47,7 +46,11 @@ impl OutputInstructions {
 }
 
 #[substreams::handlers::map]
-fn map_spl_instructions(params: String, transactions: solTransactions, foundational_store: FoundationalStore) -> Result<SplInstructions, Error> {
+fn map_spl_instructions(
+    params: String,
+    transactions: SolanaTransactions,
+    foundational_store: FoundationalStore,
+) -> Result<SplInstructions, Error> {
     let mut instructions: Vec<Instruction> = vec![];
 
     let mut spl_token_address = String::new();
@@ -146,13 +149,30 @@ fn resolve_account_owners(
         .filter_map(|account| bs58::decode(account).into_vec().ok())
         .collect();
 
+    let test = account_bytes[0].clone();
+
+    let response = foundational_store.get(test);
+    if response.response == ResponseCode::Found as i32 {
+        if let Ok(account_owner) = AccountOwner::decode(response.value.unwrap().value.as_slice()) {
+            substreams::log::info!("Owner is {}", Address(&account_owner.owner).to_string());
+        }
+    }
+
     let resp = foundational_store.get_all(&account_bytes);
 
     for entry in resp.entries {
-        let Some(get_response) = entry.response else { continue; };
-        if get_response.response != ResponseCode::Found as i32 { continue; }
-        let Some(value) = get_response.value else { continue; };
-        let Ok(account_owner) = AccountOwner::decode(value.value.as_slice()) else { continue; };
+        let Some(get_response) = entry.response else {
+            continue;
+        };
+        if get_response.response != ResponseCode::Found as i32 {
+            continue;
+        }
+        let Some(value) = get_response.value else {
+            continue;
+        };
+        let Ok(account_owner) = AccountOwner::decode(value.value.as_slice()) else {
+            continue;
+        };
 
         let account_b58 = bs58::encode(&entry.key).into_string();
         let owner_b58 = bs58::encode(&account_owner.owner).into_string();
@@ -163,7 +183,7 @@ fn resolve_account_owners(
 }
 
 /// Iterates over successful transactions in given block and take ownership.
-fn transactions_owned(transactions: solTransactions) -> impl Iterator<Item = ConfirmedTransaction> {
+fn transactions_owned(transactions: SolanaTransactions) -> impl Iterator<Item = ConfirmedTransaction> {
     transactions.transactions.into_iter().filter(|trx| -> bool {
         if let Some(meta) = &trx.meta {
             return meta.err.is_none();
@@ -358,4 +378,3 @@ pub fn is_token_transfer(spl_token_address: &str, pre_token_balances: &Vec<Token
     }
     false
 }
-
