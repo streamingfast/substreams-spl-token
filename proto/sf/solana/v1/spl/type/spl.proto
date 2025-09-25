@@ -96,7 +96,8 @@ message InitializedAccount {
     }
   };
 
-  string account = 1 [(schema.field) = { primary_key: true }];
-  string mint = 2;
-  string owner = 3;
+  string account = 1;
+  string instruction_id = 2 [(schema.field) = { primary_key: true }];
+  string mint = 3;
+  string owner = 4;
 }
