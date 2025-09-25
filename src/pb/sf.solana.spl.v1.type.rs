@@ -71,10 +71,8 @@ pub struct InitializedAccount {
     #[prost(string, tag="1")]
     pub account: ::prost::alloc::string::String,
     #[prost(string, tag="2")]
-    pub instruction_id: ::prost::alloc::string::String,
-    #[prost(string, tag="3")]
     pub mint: ::prost::alloc::string::String,
-    #[prost(string, tag="4")]
+    #[prost(string, tag="3")]
     pub owner: ::prost::alloc::string::String,
 }
 // @@protoc_insertion_point(module)

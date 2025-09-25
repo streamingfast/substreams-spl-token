@@ -35,18 +35,13 @@ impl OutputInstructions {
     }
 
     pub fn add(&mut self, item: Item) {
-        let instruction_id = self.transaction_hash.to_string() + "-" + &self.ordinal.to_string();
         self.instructions.push(Instruction {
             transaction_hash: self.transaction_hash.to_string(),
-            instruction_id: instruction_id.clone(),
+            instruction_id: self.transaction_hash.to_string() + "-" + &self.ordinal.to_string(),
             item: Some(item),
         });
 
         self.ordinal += 1;
-    }
-
-    pub fn get_next_instruction_id(&self) -> String {
-        self.transaction_hash.to_string() + "-" + &self.ordinal.to_string()
     }
 }
 
@@ -342,11 +337,9 @@ fn process_token_instruction(
 
                 let account = &instruction.accounts()[0];
                 let owner = &instruction.accounts()[2];
-                let instruction_id = output.get_next_instruction_id();
 
                 output.add(Item::InitializedAccount(InitializedAccount {
                     account: account.to_string(),
-                    instruction_id,
                     mint: mint.to_string(),
                     owner: owner.to_string(),
                 }));
@@ -358,11 +351,9 @@ fn process_token_instruction(
                 }
 
                 let account = &instruction.accounts()[0];
-                let instruction_id = output.get_next_instruction_id();
 
                 output.add(Item::InitializedAccount(InitializedAccount {
                     account: account.to_string(),
-                    instruction_id,
                     mint: mint.to_string(),
                     owner: bs58::encode(ow).into_string(),
                 }));

@@ -18,7 +18,7 @@ First, add the SPL Token import to your `substreams.yaml` manifest:
 
 imports:
   ...
-  spl_token: solana-spl-token@v0.1.3
+  spl_token: solana-spl-token@v0.1.4
 
 modules:
   ...
