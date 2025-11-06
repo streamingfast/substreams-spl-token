@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: solana-spl-token
-  version: v0.1.4
+  version: v0.2.0
   url: https://github.com/streamingfast/substreams-spl-token
   image: logo.png
   description: |
@@ -12,7 +12,7 @@ package:
 
 imports:
   solana_common: solana-common@v0.3.0
-  spl_initialized_account: spl-initialized-account@v0.1.2
+  spl_initialized_account: spl-initialized-account@v0.2.0
 
 protobuf:
   files:

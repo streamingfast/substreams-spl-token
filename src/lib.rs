@@ -10,7 +10,7 @@ use prost::Message;
 use std::collections::{HashMap, HashSet};
 use std::ops::Div;
 use substreams::errors::Error;
-use substreams::pb::sf::substreams::foundational_store::v1::ResponseCode;
+use substreams::pb::sf::substreams::foundational_store::model::v2::ResponseCode;
 use substreams::store::FoundationalStore;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana::pb::sf::solana::r#type::v1::{ConfirmedTransaction, TokenBalance, TransactionStatusMeta};
@@ -139,6 +139,9 @@ fn resolve_account_owners(
     foundational_store: &FoundationalStore,
     accounts: &HashSet<String>,
 ) -> HashMap<String, String> {
+
+    substreams::log::info!("Grrrrr: resolve_account_owners");
+
     let mut results = HashMap::with_capacity(accounts.len());
     if accounts.is_empty() {
         return results;
@@ -149,35 +152,29 @@ fn resolve_account_owners(
         .filter_map(|account| bs58::decode(account).into_vec().ok())
         .collect();
 
-    let test = account_bytes[0].clone();
-
-    let response = foundational_store.get(test);
-    if response.response == ResponseCode::Found as i32 {
-        if let Ok(account_owner) = AccountOwner::decode(response.value.unwrap().value.as_slice()) {
-            substreams::log::info!("Owner is {}", Address(&account_owner.owner).to_string());
+    let resp = foundational_store.get(&account_bytes);
+    substreams::log::info!("Grrrrr: resp: {:?}", resp);
+    for queried_entry in resp.entries {
+        if queried_entry.code != ResponseCode::Found as i32 {
+            continue;
         }
-    }
-
-    let resp = foundational_store.get_all(&account_bytes);
-
-    for entry in resp.entries {
-        let Some(get_response) = entry.response else {
+        let Some(entry) = &queried_entry.entry else {
             continue;
         };
-        if get_response.response != ResponseCode::Found as i32 {
-            continue;
-        }
-        let Some(value) = get_response.value else {
+        let Some(value) = &entry.value else {
             continue;
         };
         let Ok(account_owner) = AccountOwner::decode(value.value.as_slice()) else {
             continue;
         };
 
-        let account_b58 = bs58::encode(&entry.key).into_string();
+        let account_b58 = bs58::encode(&entry.key.as_ref().unwrap().bytes).into_string();
         let owner_b58 = bs58::encode(&account_owner.owner).into_string();
+
+        substreams::log::info!("Grrrrr: {} -> {}", account_b58, owner_b58);
         results.insert(account_b58, owner_b58);
     }
+
 
     results
 }
