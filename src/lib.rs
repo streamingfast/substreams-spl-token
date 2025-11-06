@@ -140,8 +140,6 @@ fn resolve_account_owners(
     accounts: &HashSet<String>,
 ) -> HashMap<String, String> {
 
-    substreams::log::info!("Grrrrr: resolve_account_owners");
-
     let mut results = HashMap::with_capacity(accounts.len());
     if accounts.is_empty() {
         return results;
@@ -153,7 +151,6 @@ fn resolve_account_owners(
         .collect();
 
     let resp = foundational_store.get(&account_bytes);
-    substreams::log::info!("Grrrrr: resp: {:?}", resp);
     for queried_entry in resp.entries {
         if queried_entry.code != ResponseCode::Found as i32 {
             continue;
@@ -171,7 +168,6 @@ fn resolve_account_owners(
         let account_b58 = bs58::encode(&entry.key.as_ref().unwrap().bytes).into_string();
         let owner_b58 = bs58::encode(&account_owner.owner).into_string();
 
-        substreams::log::info!("Grrrrr: {} -> {}", account_b58, owner_b58);
         results.insert(account_b58, owner_b58);
     }
 
